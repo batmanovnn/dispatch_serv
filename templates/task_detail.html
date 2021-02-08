@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ task.id }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5">
+        <h1>№{{ task.id }} от {{ task.timestamp.date() }}</h1>
+
+            <div class="alert alert-info">
+                <table class="table table-striped">
+                    <tr><td>Квартира: <span class="badge bg-primary text-light">{{ task.room_id }}</span>
+                        <td>Тип обращения: {{ task.type_id }}</td>
+                        <td>Исполнитель: {{ task.worker_id }}</td>
+                    </tr>
+                    <tr><td>{{ task.text }}</td><td></td></tr>
+                </table>
+                <!-- Кнопка запуска модального окна -->
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                  Дополнить
+                </button>
+            </div>
+
+<!--Извлечение обращений из БД-->
+        {% if tasks|length > 0 %}
+            {% for el in  tasks %}
+                {% if el.ind_orig == False and el.ref_orig == task.id%}
+                <div class="alert alert-info">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Дата: {{ el.timestamp.date() }}</td>
+                            <td>Тип обращения: {{ el.type_id }}</td>
+                            <td>Исполнитель: {{ el.worker_id }}</td>
+                        </tr>
+                        <tr><td>{{ el.text }}</td><td></td></tr>
+                    </table>
+                </div>
+
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>На сайте ещё нет статей.</p>
+        {% endif %}
+
+    </div>
+
+    <!-- Модальное окно -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Форма дополнения обращения</h4>
+      </div>
+      <div class="modal-body">
+          <form method="post">
+
+                <input list="type" name="type_obr" id="type_obr" class="form-control" placeholder="Тип обращения..." /><br>
+
+                <textarea name="text" id="text" rows="5" class="form-control" placeholder="Текст обращения..."></textarea><br>
+
+                <input list="worker" name="worker_id" id="worker_id" class="form-control" placeholder="Исполнитель..." />
+
+                <br>
+                <input type="submit" class="btn btn-primary" value="Отправить">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<datalist id="type">
+    <option value="Электрика">
+    <option value="Водоснабжение">
+    <option value="Отопление">
+    <option value="Строительные работы">
+    <option value="Уборка территории">
+    <option value="Общие вопросы">
+</datalist>
+
+<datalist id="worker">
+    <option value="Иванов">
+    <option value="Петров">
+    <option value="Сидоров">
+    <option value="Руковишников">
+    <option value="Лопатин">
+    <option value="Вилкин">
+</datalist>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+О проекте
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>О проекте</h1>
+        <p>Проект создан как прототип информационной системы(ИС) в рамках учебной практики.</p>
+        <p>Данный проект реализован на языке программирования Python, с использованием фреймворка Flask.</p>
+        <p>В качестве СУБД взята SQLite. Но благодаря использованию библиотеки Flask-SQLAlchemy возможно использование
+            и др. актуальных для разработки web-приложений СУБД, таких как PostgreSQL, MySQL, MariaDB, Oracle.</p>
+        <picture>
+            <source srcset="{{ url_for('static', filename='EER_db.png') }}" media="(min-width: 600px)">
+            <img src="{{ url_for('static', filename='EER_db.png') }}" class="img-fluid img-thumbnail"alt="Схема БД">
+        </picture>
+    </div>
+{% endblock %}

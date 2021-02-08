@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Регистратор
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10">
+                <h1>Список заявок</h1>
+                <hr><br>
+<!-- Кнопка запуска модального окна -->
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                  Зарегистрировать обращение
+                </button>
+                <!-- Полный список тикетов -->
+                <a class="btn btn-warning btn-sm text-right" href="/table">Только оригинальные записи БД</a>
+                <br><br>
+<!--Список обращений -->
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">№ кв</th>
+                      <th scope="col">Дата</th>
+                      <th scope="col">Время</th>
+                      <th scope="col">Тип</th>
+                      <th scope="col">Исполнитель</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+<!--Извлечение обращений из БД-->
+                      {% if tasks|length > 0 %}
+                        {% for el in  tasks %}
+
+                                <tr>
+                                    <td>{{ el.id }}</td>
+                                    {% if el.ind_orig == True%}
+                                        <td><span class="badge bg-primary text-light">{{ el.room_id }}</span></td>
+                                    {% else %}
+                                        <td><span class="badge bg-secondary text-light">{{ el.room_id }}</span></td>
+                                    {% endif %}
+                                    <td>{{ el.timestamp.date() }}</td>
+                                    <td>{{ el.timestamp.time().strftime("%H:%M:%S") }}</td>
+                                    <td>{{ el.type_id }}</td>
+                                    <td>{{ el.worker_id }}</td>
+
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" href="/task/{{ el.id }}">Детальнее...</a>
+                                        <a class="btn btn-danger btn-sm" href="/task/{{ el.id }}/del">Delete</a>
+                                    </td>
+                                </tr>
+
+                        {% endfor %}
+                      {% else %}
+                            <p>В БД нет записей.</p>
+                      {% endif %}
+
+                  </tbody>
+                </table>
+              </div>
+        </div>
+    </div>
+
+
+
+<!-- Модальное окно -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Форма регистрации обращения</h4>
+      </div>
+      <div class="modal-body">
+          <form method="post">
+
+            <label for="room_number">Номер квартиры</label>
+            <input type="text" name="room_number" id="room_number" class="form-control" placeholder="Номер квартиры..."><br>
+
+                <input type="tel" name="tel" id="tel" class="form-control" placeholder="Номер телефона..."><br>
+
+                <input type="email" name="email" id="email" class="form-control" placeholder="e-mail..."><br>
+
+                <input list="type" name="type_obr" id="type_obr" class="form-control" placeholder="Тип обращения..." /><br>
+
+                <textarea name="text" id="text" rows="5" class="form-control" placeholder="Текст обращения..."></textarea><br>
+
+                <input list="worker" name="worker_id" id="worker_id" class="form-control" placeholder="Исполнитель..." />
+
+              <br>
+            <input type="submit" class="btn btn-primary" value="Отправить">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<datalist id="type">
+    <option value="Электрика">
+    <option value="Водоснабжение">
+    <option value="Отопление">
+    <option value="Строительные работы">
+    <option value="Уборка территории">
+    <option value="Общие вопросы">
+</datalist>
+
+<datalist id="worker">
+    <option value="Иванов">
+    <option value="Петров">
+    <option value="Сидоров">
+    <option value="Руковишников">
+    <option value="Лопатин">
+    <option value="Вилкин">
+</datalist>
+
+{% endblock %}
+
+{# <div >#}
+{#                <label class="sr-only" for="inlineFormSelectPref">Тип обращения...</label>#}
+{#                <select class="form-select" id="type_obr">#}
+{#                  <option selected>Choose...</option>#}
+{#                  <option value="1">One</option>#}
+{#                  <option value="2">Two</option>#}
+{#                  <option value="3">Three</option>#}
+{#                </select>#}
+{#                 </div>#}
